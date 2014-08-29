@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>UNAOC 2014</title>
+		<meta name="description" content="Perceptions of Migration Panel at the UNAOC Global Forum">
+		
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/nikola.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );}
+		</script>
+		
+		<!--[if lt IE 9]><script src="lib/js/html5shiv.js"></script><![endif]-->
+
+	  <!-- D3 -->
+		<link href="d3/dist/app-v1.css" rel="stylesheet" media="all">
+		<!--[if lt IE 9]><script src=javascripts/html5shiv-printshiv.js></script><![endif]-->
+		<script src="d3/dist/app-v1.js"></script>
+	  
+	 <!-- Twitter colour theme -->
+		<meta name="twitter:widgets:link-color" content="#FF7F00">
+		<meta name="twitter:widgets:theme" content="dark">
+	
+	</head>
+	<body>
+	<div class="reveal">
+		<div class="slides">
+
+		<!-- SLIDES -->		
+
+			<section data-background="images/text-tabelle.jpg">		
+			<h2>State of science communication</h2>
+			<blockquote>
+			“Scientists must learn to communicate with the public, be willing to do so and indeed consider it their duty to do so.”
+			</blockquote>
+			<p style="text-align:right">Royal Society, 1985</p>
+	
+		
+			<section data-background="images/boat_italian_navy.jpeg">				
+				<h2 style="background-color: rgba(0, 0, 0, 0.5)">Common presumption:</h2>
+				<h2 style="color:#F4EBCE; background-color: rgba(0, 0, 0, 0.5)">Global migration has accelerated and diversified</h2>
+			</section>
+			
+			<section>
+				<h2>Problems with data on migration flows</h2>
+				<p>Provided by less than 50 countries.</p>
+				<p>Differences in the way of measurement.</p>
+				<p>Harmonised flow data exist only for Europe</p>
+			</section>			
+			
+			<section>
+				<h2>Data on migrant stocks</h2>
+				<p>Widely captured in population censuses.</p>
+				<p>Country of birth != country of current residence.</p>
+				<p>U.N. released global bilateral dataset in 2013.</p>
+				<p>Accumulative measure that cannot capture recent trends.</p>
+			</section>					
+	
+			<section data-background="images/train_people_abcnetau.jpg">				
+				<h2 style="background-color: rgba(0, 0, 0, 0.4)">How many people migrated in the world in 2005-10?</h2>
+			</section>	
+			
+			<section>
+				<h2>Estimating flows from stocks</h2>
+				<table><tr>
+				<td>
+				<h3 style="text-decoration: underline">UN stock data</h3>
+				<p>lifetime transitions</p>
+				<p>static snapshot of <br>immigrant population</p>
+				<p>1990, 2000, 2010</p>
+				<p>~220 countries</p></td>
+				<td><h2>&#10140; </h2></td>
+				<td style="padding-left:1.5em">
+				<h3 style="text-decoration: underline">Our flow estimates</h3>
+				<p>5-year transitions</p>
+				<p>dynamic movements<br> over time</p>
+				<p>1990-95 to 2005-10</p>
+				<p>196 countries</p></td>
+				</tr></table>
+			</section>	
+
+			<section>
+				<h2>No rising tide of migration</h2>
+				<p>About 0.6 % of world population have moved over 5-year periods since 1995.</p>
+				<img src="images/global-intensity.png"  width="700">
+			</section>
+	
+			<section>
+				<img class="stretch" src="images/minard_map1.png">
+			</section>		
+
+			<section>
+				<img class="stretch" src="images/flowmap.png">
+			</section>	
+			
+			<section>
+				<img class="stretch" src="images/circos1.png">
+			</section>	
+
+			
+			<!-- Interactive -->
+			<section style="width:800px">
+				<div>
+					<nav role=navigation>
+					<div id="timeline"></div>
+					</nav>
+
+					<div id="diagram"></div>
+				</div>
+				  <script>
+					(function() {
+					  var help = d3.select('#help');
+					  help.on('click', function() {
+						var isActive = help.classed('active');
+						help
+						  .classed('active', !isActive)
+						  .transition()
+						  .style('width', isActive ? '30px' : '572px');
+					  });
+					  function helpOffset() {
+						var offset = Math.max((document.body.clientWidth - document.getElementById('container').clientWidth) / 2, 0);
+						help.style('right', offset + 'px');
+					  }
+					  d3.select(window).on('resize.help-resize', helpOffset);
+					  helpOffset();
+					})();
+				  </script>
+				  <script>
+					(function() {
+					  var datafile = 'd3/json/migrations.json';
+					  var aLittleBit = Math.PI / 100000;
+					  d3.json(datafile, function(data) {
+						var now = 2005;
+						var chart = Globalmigration.chart(data, {
+						  element: '#diagram',
+						  now: now,
+						  animationDuration: 1400,
+						  margin: 125,
+						  arcPadding: 0.04,
+						  layout: {
+							threshold: 50000,
+							labelThreshold: 5000,
+							colors: 'cd3d08 ec8f00 6dae29 683f92 b60275 2058a5 00a592 009d3c 378974 ffca00'.split(' ').map(function(c) { return '#' + c; })
+						  }
+						});
+						Globalmigration.timeline(chart, {
+						  now: now,
+						  element: '#timeline'
+						});
+						chart.draw(now);
+					  });
+					})();
+				  </script>
+				  <script>
+					(function() {
+					  function loadScript(d,s,l,id){
+						var js,
+						fjs=d.getElementsByTagName(s)[0],
+						p=/^http:/.test(d.location)?'http':'https';
+						if(!id || !d.getElementById(id)){
+						  js=d.createElement(s);
+						  js.id=id;
+						  js.src=p+'://' + l;
+						  fjs.parentNode.insertBefore(js,fjs);
+						}
+					  }
+					})();
+				  </script>
+			</section>			
+
+			<section data-background="images/quartz.png">
+			</section>	
+			
+			<section>
+				<blockquote class="twitter-tweet" width="520" align="center" data-conversation="none"><p>Where everyone in the world is migrating <a href="http://t.co/goRNOClrFj">http://t.co/goRNOClrFj</a> <a href="http://t.co/1b6rI2LW50">pic.twitter.com/1b6rI2LW50</a></p>&mdash; Quartz (@qz) <a href="https://twitter.com/qz/statuses/449361162035945473">March 28, 2014</a></blockquote>
+				<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+			</section>
+			
+			<section>
+				<blockquote class="twitter-tweet" width="520" align="center" data-conversation="none" data-cards="hidden"><p>Very interesting, pretty, and pretty thought-provoking too... puts the UK tabloids' rants into perspective! <a href="http://t.co/9TPJWD63Lc">http://t.co/9TPJWD63Lc</a></p>&mdash; Craig Owen (@craigowen1976) <a href="https://twitter.com/craigowen1976/statuses/450743201193013248">March 31, 2014</a></blockquote>
+				<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+			</section>
+			
+			<section>
+				<blockquote class="twitter-tweet" width="520" align="center" data-conversation="none" data-cards="hidden"><p><a>#SomeoneTellMarineLePen</a> African migrants aren't invading us, and here's the data to prove it <a href="http://t.co/njcn66Xsjg">http://t.co/njcn66Xsjg</a> <a href="http://t.co/Ug4hTcl8V0">pic.twitter.com/Ug4hTcl8V0</a></p>&mdash; Jacques (@jacksometer) <a href="https://twitter.com/jacksometer/statuses/450603653158957057">March 31, 2014</a></blockquote>
+				<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+			</section>
+
+		
+		<!-- END SLIDES -->		
+		</div>
+	</div>
+	
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.min.js"></script>
+
+	<script>
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: false,
+				history: false,
+				center: true,
+				slideNumber: true,
+				keyboard: true,
+				overview: true,
+				touch: true,
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'fade', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+	</script>
+	</div>
+</body>
+</html>
